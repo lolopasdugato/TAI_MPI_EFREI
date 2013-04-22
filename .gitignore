@@ -11,3 +11,15 @@
 *.lai
 *.la
 *.a
+
+# Output dir
+Debug/
+Release/
+
+# Eclipse CDT project files
+.cproject
+.project
+
+# Doxygen dir
+doc/html
+doc/latex
