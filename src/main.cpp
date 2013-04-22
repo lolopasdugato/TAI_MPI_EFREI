@@ -1,15 +1,12 @@
-//============================================================================
-// Name        : TAI_MPI_EFREI.cpp
-// Author      : Alpha
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
+#include "../include/Automaton.h"
+
 using namespace std;
 
+/**
+ * @brief main function
+ * @return
+ */
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
 }
