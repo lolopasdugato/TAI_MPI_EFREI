@@ -10,6 +10,9 @@
 #ifndef AUTOMATON_H_
 #define AUTOMATON_H_
 
+#include <vector>
+#include "Transition.h"
+
 class Automaton {
 public:
 	Automaton();
@@ -24,24 +27,25 @@ public:
 	void setMinimized(bool minimized);
 	bool isStandard() const;
 	void setStandard(bool standard);
-	int* getA() const;
-	void setA(int* a);
-	int* getI() const;
-	void setI(int* i);
-	int* getQ() const;
-	void setQ(int* q);
-	int* getT() const;
-	void setT(int* t);
-	int getAsize() const;
-	void setAsize(int asize);
-	int getIsize() const;
-	void setIsize(int isize);
-	int getQsize() const;
-	void setQsize(int qsize);
-	int getTsize() const;
-	void setTsize(int tsize);
+	const std::vector<int>& getA() const;
+	void setA(const std::vector<int>& a);
+	const std::vector<int>& getI() const;
+	void setI(const std::vector<int>& i);
+	const std::vector<int>& getQ() const;
+	void setQ(const std::vector<int>& q);
+	const std::vector<int>& getT() const;
+	void setT(const std::vector<int>& t);
+	const std::vector<Transition>& getTt() const;
+	void setTt(const std::vector<Transition>& tt);
 
-	void fill(int* charac1, int* charac2);
+	// File Reading
+	bool loadAutomaton();
+	bool readA();
+	bool readI();
+	bool readQ();
+	bool readT();
+	bool readTransition();
+
 
 private:
 	// Automaton current status
@@ -51,15 +55,11 @@ private:
 	bool _standard;
 
 	// Automaton characteristics
-	int* _I; // Initial states
-	int* _T; // Terminal states
-	int* _Q; // Finished states
-	int* _A; // Language recognized
-	int _Isize; // Number of initial states
-	int _Tsize; // Number of terminal states
-	int _Qsize; // Number of finished states
-	int _Asize; // Number of characters recognized
-
+	std::vector<int> _I; // Initial states
+	std::vector<int> _T; // Terminal states
+	std::vector<int> _Q; // Finished states
+	std::vector<int> _A; // Language recognized
+	std::vector<Transition> _TT; // Transition table
 };
 
 #endif /* AUTOMATON_H_ */

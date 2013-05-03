@@ -8,8 +8,10 @@
  */
 
 #include "../include/Automaton.h"
-#include <stdlib.h>
-
+#include "../include/Transition.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
 /**
  *
  */
@@ -18,15 +20,6 @@ Automaton::Automaton() {
 	_determinized = false;
 	_minimized = false;
 	_completed = false;
-
-	_T = NULL;
-	_I = NULL;
-	_Q = NULL;
-	_A = NULL;
-	_Tsize = 0;
-	_Asize = 0;
-	_Qsize = 0;
-	_Isize = 0;
 }
 
 /**
@@ -39,30 +32,16 @@ Automaton::Automaton(const Automaton& automaton) {
 	_minimized = automaton._minimized;
 	_completed = automaton._completed;
 
-	_Tsize = automaton._Tsize;
-	_Isize = automaton._Isize;
-	_Qsize = automaton._Qsize;
-	_Asize = automaton._Asize;
-	_T = new int[_Tsize];
-	_I = new int[_Isize];
-	_Q = new int[_Qsize];
-	_A = new int[_Asize];
-	/*
-	fill(_T, automaton._T);
-	fill(_Q, automaton._Q);
-	fill(_A, automaton._A);
-	fill(_I, automaton._I);
-	*/
+	_I = automaton._I;
+	_Q = automaton._Q;
+	_A = automaton._A;
+	_T = automaton._T;
 }
 
 /**
  *
  */
 Automaton::~Automaton() {
-	delete[] _T;
-	delete[] _I;
-	delete[] _A;
-	delete[] _Q;
 }
 
 /**
@@ -133,7 +112,7 @@ void Automaton::setStandard(bool standard) {
  *
  * @return
  */
-int* Automaton::getA() const {
+const std::vector<int>& Automaton::getA() const {
 	return _A;
 }
 
@@ -141,7 +120,7 @@ int* Automaton::getA() const {
  *
  * @param a
  */
-void Automaton::setA(int* a) {
+void Automaton::setA(const std::vector<int>& a) {
 	_A = a;
 }
 
@@ -149,7 +128,7 @@ void Automaton::setA(int* a) {
  *
  * @return
  */
-int* Automaton::getI() const {
+const std::vector<int>& Automaton::getI() const {
 	return _I;
 }
 
@@ -157,7 +136,7 @@ int* Automaton::getI() const {
  *
  * @param i
  */
-void Automaton::setI(int* i) {
+void Automaton::setI(const std::vector<int>& i) {
 	_I = i;
 }
 
@@ -165,7 +144,7 @@ void Automaton::setI(int* i) {
  *
  * @return
  */
-int* Automaton::getQ() const {
+const std::vector<int>& Automaton::getQ() const {
 	return _Q;
 }
 
@@ -173,7 +152,7 @@ int* Automaton::getQ() const {
  *
  * @param q
  */
-void Automaton::setQ(int* q) {
+void Automaton::setQ(const std::vector<int>& q) {
 	_Q = q;
 }
 
@@ -181,7 +160,7 @@ void Automaton::setQ(int* q) {
  *
  * @return
  */
-int* Automaton::getT() const {
+const std::vector<int>& Automaton::getT() const {
 	return _T;
 }
 
@@ -189,7 +168,7 @@ int* Automaton::getT() const {
  *
  * @param t
  */
-void Automaton::setT(int* t) {
+void Automaton::setT(const std::vector<int>& t) {
 	_T = t;
 }
 
@@ -197,71 +176,335 @@ void Automaton::setT(int* t) {
  *
  * @return
  */
-int Automaton::getAsize() const {
-	return _Asize;
+const std::vector<Transition>& Automaton::getTt() const {
+	return _TT;
 }
 
 /**
  *
- * @param asize
+ * @param tt
  */
-void Automaton::setAsize(int asize) {
-	_Asize = asize;
+void Automaton::setTt(const std::vector<Transition>& tt) {
+	_TT = tt;
+}
+
+/**
+ * @brief return true if the array is filled with values. Read into automaton.txt
+ * @return
+ */
+bool Automaton::readA() {
+	ifstream file("data/automate.txt");
+	if (file) {
+		string line;
+		//Search "A={" from the file's beginning to the end.
+		while(getline(file, line)) {
+			unsigned int found = line.find("A={");
+			unsigned int foundCommentary = line.find("//");
+			//if it has been found, get all signs & there is no commentary
+			if(found != string::npos && foundCommentary != 1) {
+				bool end = false; // End of line flag
+				bool numberBefore = false; 	// the treated character is a number > 9 (flag)
+				int cpt = 3;
+				do {
+					if(line[cpt] == ',') {
+						numberBefore = false;
+						cpt++;
+					}
+					else if(line[cpt] == '}') end = true;
+					// If it's a number
+					else if(line[cpt] >= 48  && line[cpt] <= 57) {
+						// If the number is > 9
+						if(numberBefore) {
+							_A.back() = _A.back()*10 + ((int) line[cpt]) - 48;
+						}
+						else {
+							_A.push_back(((int) line[cpt]) - 48);
+							numberBefore = true;
+						}
+						cpt++;
+					}
+					// If it's a simple character
+					else {
+						_A.push_back((int) line[cpt]);
+						cpt++;
+					}
+				}while(!end);
+			}
+		}
+	}
+	else {
+		cout << "ERROR: file cannot be opened" << endl;
+		return false;
+	}
+	// If the array is empty, there is an error. BTW the function should return false.
+	if (_A.empty()) {
+		cout << "there are'nt any recognized language in the program. Please check how it has been written in the text file." << endl;
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @brief return true if the array is filled with values. Read into automaton.txt
+ * @return
+ */
+bool Automaton::readI() {
+	ifstream file("data/automate.txt");
+	if (file) {
+		string line;
+		//Search "I={" from the file's beginning to the end.
+		while(getline(file, line)) {
+			unsigned int found = line.find("I={");
+			unsigned int foundCommentary = line.find("//");
+			//if it has been found, get all signs & there is no commentary
+			if(found != string::npos && foundCommentary != 1) {
+				bool end = false; // End of line flag
+				bool numberBefore = false; 	// the treated character is a number > 9 (flag)
+				int cpt = 3;
+				do {
+					if(line[cpt] == ',') {
+						numberBefore = false;
+						cpt++;
+					}
+					else if(line[cpt] == '}') end = true;
+					// If it's a number
+					else if(line[cpt] >= 48  && line[cpt] <= 57) {
+						// If the number is > 9
+						if(numberBefore) {
+							_I.back() = _I.back()*10 + ((int) line[cpt]) - 48;
+						}
+						else {
+							_I.push_back((int) line[cpt] - 48);
+						}
+						cpt++;
+					}
+					// If it's a simple character
+					else {
+						_I.push_back((int) line[cpt]);
+						cpt++;
+					}
+				}while(!end);
+			}
+		}
+	}
+	else {
+		cout << "ERROR: file cannot be opened" << endl;
+		return false;
+	}
+	// If the array is empty, there is maybe an error. BTW we should inform the user by a message.
+	if (_I.empty()) {
+		cout << "Warning, there are'nt any inital states, is that normal ?" << endl;
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @brief return true if the array is filled with values. Read into automaton.txt
+ * @return
+ */
+bool Automaton::readT() {
+	ifstream file("data/automate.txt");
+	if (file) {
+		string line;
+		//Search "A={" from the file's beginning to the end.
+		while(getline(file, line)) {
+			unsigned int found = line.find("T={");
+			unsigned int foundCommentary = line.find("//");
+			//if it has been found, get all signs & there is no commentary
+			if(found != string::npos && foundCommentary != 1) {
+				bool end = false; // End of line flag
+				bool numberBefore = false; 	// the treated character is a number > 9 (flag)
+				int cpt = 3;
+				do {
+					if(line[cpt] == ',') {
+						numberBefore = false;
+						cpt++;
+					}
+					else if(line[cpt] == '}') end = true;
+					// If it's a number
+					else if(line[cpt] >= 48  && line[cpt] <= 57) {
+						// If the number is > 9
+						if(numberBefore) {
+							_T.back() = _T.back()*10 + ((int) line[cpt]) - 48;
+						}
+						else {
+							_T.push_back(((int) line[cpt]) - 48);
+							numberBefore = true;
+						}
+						cpt++;
+					}
+					// If it's a simple character
+					else {
+						_T.push_back((int) line[cpt]);
+						cpt++;
+					}
+				}while(!end);
+			}
+		}
+	}
+	else {
+		cout << "ERROR: file cannot be opened" << endl;
+		return false;
+	}
+	// If the array is empty, there is maybe an error. BTW we should inform the user by a message.
+	if (_T.empty()) {
+		cout << "Warning, there are'nt any terminal states, is that normal ?" << endl;
+	}
+	return true;
+}
+
+/**
+ * @brief return true if the array is filled with values. Read into automaton.txt
+ * @return
+ */
+bool Automaton::readQ() {
+	ifstream file("data/automate.txt");
+	if (file) {
+		string line;
+		//Search "A={" from the file's beginning to the end.
+		while(getline(file, line)) {
+			unsigned int found = line.find("Q={");
+			unsigned int foundCommentary = line.find("//");
+			//if it has been found, get all signs & there is no commentary
+			if(found != string::npos && foundCommentary != 1) {
+				bool end = false; // End of line flag
+				bool numberBefore = false; 	// the treated character is a number > 9 (flag)
+				int cpt = 3;
+				do {
+					if(line[cpt] == ',') {
+						numberBefore = false;
+						cpt++;
+					}
+					else if(line[cpt] == '}') end = true;
+					// If it's a number
+					else if(line[cpt] >= 48  && line[cpt] <= 57) {
+						// If the number is > 9
+						if(numberBefore) {
+							_Q.back() = _Q.back()*10 + ((int) line[cpt]) - 48;
+						}
+						else {
+							_Q.push_back(((int) line[cpt]) - 48);
+							numberBefore = true;
+						}
+						cpt++;
+					}
+					// If it's a simple character
+					else {
+						_Q.push_back((int) line[cpt]);
+						cpt++;
+					}
+				}while(!end);
+			}
+		}
+	}
+	else {
+		cout << "ERROR: file cannot be opened" << endl;
+		return false;
+	}
+	// If the array is empty, there is an error. BTW the function should return false.
+	if (_Q.empty()) {
+		cout << "there are'nt any states in the program. Please check how it has been written in the text file." << endl;
+		return false;
+	}
+	return true;
 }
 
 /**
  *
  * @return
  */
-int Automaton::getIsize() const {
-	return _Isize;
+bool Automaton::readTransition() {
+	ifstream file("data/automate.txt");
+	if(file) {
+		string line;
+		while (getline(file, line)) {
+			// If it's the line to get transitions and it's not a commentary, we can continue.
+			if(line.find("transitions {") != string::npos && line.find("//") != 1) {
+				// transitions reading
+				bool end = false;
+				do {
+					getline(file, line);
+					// Next line check if it's the end of transition definition
+					if (line.find("}") != string::npos) end = true;
+					else {
+						unsigned int cpt = 1;
+						bool stateBegin = true, tag = false, stateEnd = false; // Define in which members the value will be store.
+						bool numberBefore = false;
+						// Next line store each value into the right members of transitions
+						do {
+							// If it's a number && we already store a number before
+							if (numberBefore && (int) line[cpt] >= 48 && (int) line[cpt] <= 57) {
+								if(stateBegin) _TT.back().setStateBegin(_TT.back().getStateBegin()*10 + (int) line[cpt] - 48 );
+								else if (stateEnd) _TT.back().setStateEnd(_TT.back().getStateEnd()*10 + (int) line[cpt] - 48 );
+								else if (tag) _TT.back().setTag(_TT.back().getTag()*10 + (int) line[cpt] - 48 );
+								cpt++; //Go to the next char
+							}
+							// else if it's a simple number
+							else if (line[cpt] >= '0' && (int) line[cpt] <= '9') {
+								if (stateBegin) {
+									Transition a;
+									a.setStateBegin((int) line[cpt] - 48);
+									_TT.push_back(a);
+								}
+								else if (stateEnd) {
+									_TT.back().setStateEnd((int) line[cpt] - 48);
+								}
+								else if (tag){
+									_TT.back().setTag((int) line[cpt] - 48);
+								}
+								cpt++;
+								numberBefore = true;
+							}
+							else if (line[cpt] == '.') {
+								numberBefore = false;
+								if (stateBegin) { // if we were working on beginning state
+									stateBegin = false;
+									tag = true;
+								}
+								else if (tag) { // if we were working on transition's tag
+									tag = false;
+									stateEnd = true;
+								}
+								// Else we don't care because we are at the line's end
+								cpt++;
+							}
+							else if (line[cpt] <= 'z' && line[cpt] >= 'a') { // if it's a letter
+								if (stateBegin) {
+									Transition a;
+									a.setStateBegin((int) line[cpt]);
+									_TT.push_back(a);
+								}
+								else if (stateEnd) {
+									_TT.back().setStateEnd(((int) line[cpt]));
+								}
+								else if (tag) {
+									_TT.back().setTag(((int) line[cpt]));
+								}
+								cpt++;
+								numberBefore = false;
+							}
+						}while(cpt < line.size());
+					}
+				}while(!end);
+			}
+		}
+	}
+	else {
+		cout << "ERROR: file cannot be opened" << endl;
+		return false;
+	}
+	return true;
 }
 
 /**
- *
- * @param isize
+ * @brief should verify if all files are OK.
  */
-void Automaton::setIsize(int isize) {
-	_Isize = isize;
+bool Automaton::loadAutomaton() {
+	if (Automaton::readA() && Automaton::readQ() && Automaton::readI() && Automaton::readT() && Automaton::readTransition()) {
+		return true;
+	}
+	else return false;
 }
 
-/**
- *
- * @return
- */
-int Automaton::getQsize() const {
-	return _Qsize;
-}
 
-/**
- *
- * @param qsize
- */
-void Automaton::setQsize(int qsize) {
-	_Qsize = qsize;
-}
-
-/**
- *
- * @return
- */
-int Automaton::getTsize() const {
-	return _Tsize;
-}
-
-/**
- *
- * @param tsize
- */
-void Automaton::setTsize(int tsize) {
-	_Tsize = tsize;
-}
-
-/**
- * @brief Dynamic array filler
- * @param charac1
- * @param charac2
- */
-void fill(const int* charac1, const int* charac2) {
-	return;
-}

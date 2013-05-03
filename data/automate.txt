@@ -1,0 +1,30 @@
+// Utilisez "//" pour écrire des commentaire dans le fichier.
+
+// Alphabet reconnu :
+
+A={a,b,c}
+
+// Etats terminaux :
+
+T={34,22,1}
+
+// Etats initiaux :
+
+I={0}
+
+// Etats :
+
+Q={0,1,2,3,4,5,22,34}
+
+// Transisions :
+
+transitions {
+	1.a.2
+	12.b.5
+	257.x.589
+	33.z.87
+	57.p.24
+	78.u.57
+	89.y.88
+	87.z.87
+}

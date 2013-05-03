@@ -14,6 +14,7 @@ class Transition {
 public:
 	Transition(const int& tag = -1, const int& stateBegin = -1, const int& stateEnd = -1);
 	virtual ~Transition();
+
 	int getStateBegin() const;
 	void setStateBegin(int stateBegin);
 	int getStateEnd() const;
@@ -21,6 +22,7 @@ public:
 	int getTag() const;
 	void setTag(int tag);
 
+	void loadTransition();
 private:
 	int _stateBegin;
 	int _stateEnd;

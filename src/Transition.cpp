@@ -15,7 +15,7 @@
  * @param stateBegin
  * @param stateEnd
  */
-Transition::Transition(const int& tag = -1, const int& stateBegin = -1, const int& stateEnd = -1) {
+Transition::Transition(const int& tag, const int& stateBegin, const int& stateEnd) {
 	_tag = tag;
 	_stateBegin = stateBegin;
 	_stateEnd = stateEnd;
