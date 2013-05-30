@@ -548,7 +548,8 @@ void Automaton::standardize() {
 		}
 
 		for(it2 = _Q.begin(); it2 != _Q.end(); it2++) (*it2)++;
-		_Q.push_back(0);
+		it2 = _Q.begin();
+		_Q.insert(it2,0);
 
 		// On pense à renommer les états finaux et à rajouter un nouvel état si l'automate reconaissait le mot vide !
 		for(it2 = _T.begin(); it2 != _T.end(); it2++) {
@@ -564,7 +565,10 @@ void Automaton::standardize() {
 		// On définie un unique état initial
 		_I.clear();
 		_I.push_back(0);
-		if(voidWordRecognized) _T.push_back(0);
+		if(voidWordRecognized) {
+			it2 = _T.begin();
+			_T.insert(it2,0);
+		}
 
 		_standard = true;
 	}
