@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include "../include/Automaton.h"
 #include "../include/Transition.h"
 
@@ -76,5 +77,7 @@ int main() {
 		}
 
 	}
+
+	_getch();
 	return 0;
 }
