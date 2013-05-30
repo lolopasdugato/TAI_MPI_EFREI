@@ -42,6 +42,39 @@ int main() {
 			cout << "Transition " << cpt << ": " << endl;
 			cout << c[cpt].getStateBegin() << "." << (char) c[cpt].getTag() << "." << c[cpt].getStateEnd() << endl;
 		}
+		cout << endl << endl << endl;
+
+		if(!a.isStandard()) a.standardize();
+		b = a.getA();
+		cout << "Alphabet :";
+		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
+			cout << " " << (char) b[cpt];
+		}
+		cout << endl;
+		b = a.getQ();
+		cout << "Etats :";
+		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
+			cout << " " << b[cpt];
+		}
+		cout << endl;
+		b = a.getI();
+		cout << "Etats initiaux :";
+		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
+			cout << " " << b[cpt];
+		}
+		cout << endl;
+		b = a.getT();
+		cout << "Etats terminaux :";
+		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
+			cout << " " << b[cpt];
+		}
+		cout << endl;
+		c = a.getTt();
+		for(unsigned int cpt = 0; cpt < c.size(); cpt++) {
+			cout << "Transition " << cpt << ": " << endl;
+			cout << c[cpt].getStateBegin() << "." << (char) c[cpt].getTag() << "." << c[cpt].getStateEnd() << endl;
+		}
+
 	}
 	return 0;
 }

@@ -2,29 +2,24 @@
 
 // Alphabet reconnu :
 
-A={a,b,c}
+A={a,b}
 
 // Etats terminaux :
 
-T={34,22,1}
+T={0,3}
 
 // Etats initiaux :
 
-I={0}
+I={0,1}
 
 // Etats :
 
-Q={0,1,2,3,4,5,22,34}
+Q={0,1,2,3}
 
 // Transisions :
 
 transitions {
-	1.a.2
-	12.b.5
-	257.x.589
-	33.z.87
-	57.p.24
-	78.u.57
-	89.y.88
-	87.z.87
+	0.a.2
+	1.b.2
+	2.b.3
 }

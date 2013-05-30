@@ -46,6 +46,11 @@ public:
 	bool readT();
 	bool readTransition();
 
+	// File Writing
+
+	// Actions
+	void standardize();
+
 
 private:
 	// Automaton current status

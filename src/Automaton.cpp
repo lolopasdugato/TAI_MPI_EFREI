@@ -507,4 +507,69 @@ bool Automaton::loadAutomaton() {
 	else return false;
 }
 
+/**
+ * @brief standardize an automaton
+ */
+void Automaton::standardize() {
+	vector<Transition> newArray;
+	vector<Transition> treatment;
+	vector<Transition>::iterator it1;
+	vector<int>::iterator it2;
+	vector<int>::iterator it3;
+
+	bool toStandardize = false;
+	bool voidWordRecognized = false;
+
+	// Test si L'automate doit être standardisé
+	for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
+		for(it2 = _I.begin(); it2 != _I.end(); it2++) {
+			if((*it1).getStateEnd() == (*it2)) toStandardize = true;
+		}
+	}
+
+	if(_I.size() > 1 || toStandardize == true) {
+		// On enregistre les états à traiter dans un tableau
+		for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
+			for(it2 = _I.begin(); it2 != _I.end(); it2++) {
+				if((*it1).getStateBegin() == (*it2)) treatment.push_back(*it1);
+			}
+		}
+
+		//On traite les états initiaux pour n'en faire plus qu'un et on les ranges
+		for(it1 = treatment.begin(); it1 != treatment.end(); it1++) {
+			(*it1).setStateBegin(-1);
+			_TT.push_back(*it1);
+		}
+
+		// On renomme les états pour plus de clarté
+		for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
+			(*it1).setStateBegin((*it1).getStateBegin() + 1);
+			(*it1).setStateEnd((*it1).getStateEnd() + 1);
+		}
+
+		for(it2 = _Q.begin(); it2 != _Q.end(); it2++) (*it2)++;
+		_Q.push_back(0);
+
+		// On pense à renommer les états finaux et à rajouter un nouvel état si l'automate reconaissait le mot vide !
+		for(it2 = _T.begin(); it2 != _T.end(); it2++) {
+			for(it3 = _I.begin(); it3 != _I.end(); it3++){
+				if((*it3) == (*it2)){
+					_T.erase(it2);
+					voidWordRecognized = true;
+				}
+			}
+		}
+
+
+		// On définie un unique état initial
+		_I.clear();
+		_I.push_back(0);
+		if(voidWordRecognized) _T.push_back(0);
+
+		_standard = true;
+	}
+
+
+	return;
+}
 

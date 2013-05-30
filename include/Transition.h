@@ -21,8 +21,6 @@ public:
 	void setStateEnd(int stateEnd);
 	int getTag() const;
 	void setTag(int tag);
-
-	void loadTransition();
 private:
 	int _stateBegin;
 	int _stateEnd;
