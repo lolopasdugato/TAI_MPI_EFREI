@@ -555,7 +555,6 @@ void Automaton::standardize() {
 		for(it2 = _T.begin(); it2 != _T.end(); it2++) {
 			for(it3 = _I.begin(); it3 != _I.end(); it3++){
 				if((*it3) == (*it2)){
-					_T.erase(it2);
 					voidWordRecognized = true;
 				}
 			}
