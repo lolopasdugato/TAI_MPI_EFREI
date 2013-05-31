@@ -1,5 +1,4 @@
 #include <iostream>
-#include <conio.h>
 #include "../include/Automaton.h"
 #include "../include/Transition.h"
 
@@ -11,79 +10,54 @@ using namespace std;
  */
 int main() {
 	Automaton a;
-	vector<int> b;
-	vector<Transition> c;
-	if(a.loadAutomaton()) {
-		b = a.getA();
-		cout << "Alphabet :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << (char) b[cpt];
-		}
-		cout << endl;
-		b = a.getQ();
-		cout << "Etats :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		b = a.getI();
-		cout << "Etats initiaux :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		b = a.getT();
-		cout << "Etats terminaux :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		c = a.getTt();
-		for(unsigned int cpt = 0; cpt < c.size(); cpt++) {
-			cout << "Transition " << cpt << ": " << endl;
-			cout << c[cpt].getStateBegin() << "." << (char) c[cpt].getTag() << "." << c[cpt].getStateEnd() << endl;
-		}
-		cout << endl << endl << endl;
+		short choice(-1);
+		if(a.loadAutomaton()) a.show();
+		do {
+			cout << endl << endl << endl;
+			cout << "Que souhaitez vous faire ?" << endl << endl;
+			cout << "1) Standardiser." << endl;
+			cout << "2) Determiniser." << endl;
+			cout << "3) Minimizer." << endl;
+			cout << "4) Tout faire." << endl;
+			cout << "5) Lire un mot." << endl;
+			cout << endl << "Entrez le numero de l'action : ";
+			cin >> choice;
+			cout << endl << endl;
 
-		//if(!a.isCompleted()) a.completion();
-		b = a.getA();
-
-		cout << "Apres completion : " << std::endl;
-
-		cout << "Alphabet :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << (char) b[cpt];
-		}
-		cout << endl;
-		b = a.getQ();
-		cout << "Etats :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		b = a.getI();
-		cout << "Etats initiaux :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		b = a.getT();
-		cout << "Etats terminaux :";
-		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
-			cout << " " << b[cpt];
-		}
-		cout << endl;
-		c = a.getTt();
-		for(unsigned int cpt = 0; cpt < c.size(); cpt++) {
-			cout << "Transition " << cpt << ": " << endl;
-			cout << c[cpt].getStateBegin() << "." << (char) c[cpt].getTag() << "." << c[cpt].getStateEnd() << endl;
-		}
-
-	}
-
-	cout << endl << endl << "Algo de moi" << endl << endl;
-	a.determinize();
-
-	_getch();
+			switch(choice) {
+			case 1:
+				if(!a.isStandard()) a.standardize();
+				a.show();
+				break;
+			case 2:
+				// if(!a.isDeterminized()) a.determinize();
+				cout << "pas encore implemente" << endl;
+				// a.show();
+				break;
+			case 3:
+				// if(!a.isMinimized()) a.minimize();
+				cout << "pas encore implemente" << endl;
+				// a.show();
+				break;
+			case 4:
+				/*
+				if(!a.isStandard()) a.standardize();
+				if(!a.isDeterminized()) a.determinize();
+				if(!a.isMinimized()) a.minimize();
+				*/
+				cout << "pas encore implemente" << endl;
+				// a.show();
+				break;
+			case 5:
+				// a.readWord();
+				cout << "pas encore implemente" << endl;
+				// a.show();
+				break;
+			default :
+				cout << "Entrez un action valide !" << endl;
+				break;
+			}
+			choice = -1;
+		}while(choice == -1);
 	return 0;
 }

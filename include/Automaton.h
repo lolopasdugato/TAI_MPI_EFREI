@@ -47,7 +47,9 @@ public:
 	bool readT();
 	bool readTransition();
 
-	// File Writing
+	// Others
+	void show();
+	bool readWord();
 
 	// Actions
 	void standardize();

@@ -11,6 +11,7 @@
 #include "../include/Transition.h"
 #include <iostream>
 #include <fstream>
+#include <conio.h>
 #define P -2
 using namespace std;
 /**
@@ -519,7 +520,7 @@ void Automaton::standardize() {
 	vector<int>::iterator it3;
 
 	bool toStandardize = false;
-	bool voidWordRecognized = false;
+	// bool voidWordRecognized = false;
 
 	// Test si L'automate doit �tre standardis�
 	for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
@@ -553,6 +554,7 @@ void Automaton::standardize() {
 		_Q.insert(it2,0);
 
 		// On pense � renommer les �tats finaux et � rajouter un nouvel �tat si l'automate reconaissait le mot vide !
+		/*
 		for(it2 = _T.begin(); it2 != _T.end(); it2++) {
 			for(it3 = _I.begin(); it3 != _I.end(); it3++){
 				if((*it3) == (*it2)){
@@ -560,16 +562,17 @@ void Automaton::standardize() {
 				}
 			}
 		}
-
+		*/
 
 		// On d�finie un unique �tat initial
 		_I.clear();
 		_I.push_back(0);
+		/*
 		if(voidWordRecognized) {
 			it2 = _T.begin();
 			_T.insert(it2,0);
 		}
-
+		*/
 		_standard = true;
 	}
 	return;
@@ -708,4 +711,59 @@ void Automaton::determinize() {
 	// une fois qu'on a fini tout ça, l'automate est déterminisé
 	this->_determinized = true;
 	return;
+}
+
+void Automaton::show() {
+	vector<Transition>::iterator it1;
+	vector<int>::iterator it2;
+
+	// Affichage de l'alphabet reconus
+	cout << "Alphabet reconnu :" << endl;
+	for(it2 = _A.begin(); it2 != _A.end(); it2++) {
+		cout << (char)(*it2) << " " ;
+	}
+
+	// Affichage des états
+	cout << endl << endl << "Etats contenus dans l'automate :";
+	for(it2 = _Q.begin(); it2 != _Q.end(); it2++) {
+		cout << " ";
+		if(*it2 == -2) cout << "P";
+		else cout << (*it2);
+	}
+
+	// Affichage des états initiaux
+	cout << endl << endl << "Etats initiaux :";
+	for(it2 = _I.begin(); it2 != _I.end(); it2++) {
+		cout << " ";
+		if(*it2 == -2) cout << "P";
+		else cout << (*it2);
+	}
+
+	// Affichage des états finaux
+	cout << endl << endl << "Etats finaux :";
+	for(it2 = _T.begin(); it2 != _T.end(); it2++) {
+		cout << " ";
+		if(*it2 == -2) cout << "P";
+		else cout << (*it2);
+	}
+
+	// Affichage des transitions
+	cout << endl << endl << "Transition(s) :" << endl;
+	for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
+		if ((*it1).getStateBegin() == -2) cout << "P";
+		else cout << (*it1).getStateBegin();
+		cout << "." << (char)(*it1).getTag() << ".";
+		if((*it1).getStateEnd() == -2) cout << "P";
+		else cout << (*it1).getStateEnd();
+		cout << endl;
+	}
+	_getch();
+	return;
+}
+
+bool Automaton::readWord() {
+	string saisie;
+	cout << "veuillez saisire un mot (# etant le mot vide) :" << endl;
+	cin >> saisie;
+	return false;
 }
