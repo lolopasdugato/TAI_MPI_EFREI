@@ -604,7 +604,7 @@ void Automaton::completion() {
 		it2 = _Q.begin();
 
 		// On va vérifier si pour chaque état, il y a assez de transition
-		do {
+		for (it2 = _Q.begin(); it2 != _Q.end(); it2++) {
 			for(it1 = _TT.begin(); it1 != _TT.end(); it1++)
 				if(*it2 == (*it1).getStateBegin()) treatment.push_back(*it1);
 
@@ -623,10 +623,9 @@ void Automaton::completion() {
 				tag_present = false;
 			}
 			treatment.clear();
-			it2++;
-		}while(nb_transit < nb_state*nb_tag);
+		}
+		_completed = true;
 	}
-
 	return;
 }
 

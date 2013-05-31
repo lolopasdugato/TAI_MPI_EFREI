@@ -45,8 +45,11 @@ int main() {
 		}
 		cout << endl << endl << endl;
 
-		if(!a.isStandard()) a.standardize();
+		if(!a.isCompleted()) a.completion();
 		b = a.getA();
+
+		cout << "Apres completion : " << std::endl;
+
 		cout << "Alphabet :";
 		for (unsigned int cpt = 0; cpt < b.size(); cpt++) {
 			cout << " " << (char) b[cpt];
