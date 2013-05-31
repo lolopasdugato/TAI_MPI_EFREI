@@ -762,8 +762,55 @@ void Automaton::show() {
 }
 
 bool Automaton::readWord() {
-	string saisie;
+	string input;
+	string::iterator it;
+	vector<int>::iterator it1;
+	vector<Transition>::iterator it2;
+	vector<Transition>::iterator it3;
+	vector<int>::iterator it4;
+	Transition before;
+	bool itWorks = false;
+
 	cout << "veuillez saisire un mot (# etant le mot vide) :" << endl;
-	cin >> saisie;
+	cin >> input;
+
+
+	// Vérifier si l'alphabet est bien reconnu avant;
+
+	// Pour chaques états initiaux existants ...
+	for(it1 = _I.begin(); it1 != _I.end(); it1++) {
+		for(it2 = _TT.begin(); it2 != _TT.end(); it2++) {
+			it = input.begin();
+			// On vérifie si la transition demandée existe pour au moins un état initial
+			if((*it2).getStateBegin() == (*it1) && (*it2).getTag() == *it) {
+				before = (*it2);
+				// + ajouter le test du mot vide
+
+				// Test pour un mot d'une lettre
+				if(input.size() == 1) {
+					for(it4 = _T.begin(); it4 != _T.end(); it4++) {
+						if(before.getStateEnd() == (*it4)) return true;
+					}
+				}
+				else if ((input.size() == 1) && (it1 + 1) == _I.end()) return false;
+				else if (input.size() > 1) {
+					do {
+						it++;
+						for(it3 = _TT.begin(); it3 != _TT.end(); it3++) {
+							// Si L'état précédent et l'état de départ de la transition corresponde, on peut faire la transition.
+							if(before.getStateEnd() == (*it3).getStateBegin() && (*it) == (*it3).getTag()) {
+								before = (*it3);
+							}
+						}
+					}while((it + 1) != input.end());
+					if((it + 1) == input.end()) {
+						for(it4 = _T.begin(); it4 != _T.end(); it4++) {
+							if(before.getStateEnd() == (*it4)) return true;
+						}
+					}
+				}
+			}
+		}
+	}
 	return false;
 }

@@ -49,8 +49,9 @@ int main() {
 				// a.show();
 				break;
 			case 5:
-				// a.readWord();
-				cout << "pas encore implemente" << endl;
+				if(!a.readWord()) cout << "Le mot n'est pas reconnu !" << endl;
+				else cout << "Le mot est reconnu !" << endl;
+				// cout << "pas encore implemente" << endl;
 				// a.show();
 				break;
 			default :
