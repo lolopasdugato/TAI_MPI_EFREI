@@ -7,7 +7,7 @@
  *@details
  */
 
-#include "../include/Transition.h"
+#include "../include/BenetNguyenNasserTransition.h"
 
 /**
  *

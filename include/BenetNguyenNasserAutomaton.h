@@ -11,8 +11,9 @@
 #define AUTOMATON_H_
 
 #include <vector>
-#include "Transition.h"
+#include "BenetNguyenNasserTransition.h"
 #include <stdlib.h>
+#include <string>
 
 class Automaton {
 public:
@@ -40,12 +41,12 @@ public:
 	void setTt(const std::vector<Transition>& tt);
 
 	// File Reading
-	bool loadAutomaton();
-	bool readA();
-	bool readI();
-	bool readQ();
-	bool readT();
-	bool readTransition();
+	bool loadAutomaton(std::string path);
+	bool readA(std::string path);
+	bool readI(std::string path);
+	bool readQ(std::string path);
+	bool readT(std::string path);
+	bool readTransition(std::string path);
 
 	// Others
 	void show();

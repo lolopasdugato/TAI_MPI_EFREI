@@ -7,8 +7,8 @@
  *@details
  */
 
-#include "../include/Automaton.h"
-#include "../include/Transition.h"
+#include "../include/BenetNguyenNasserAutomaton.h"
+#include "../include/BenetNguyenNasserTransition.h"
 #include <iostream>
 #include <fstream>
 #include <conio.h>
@@ -194,8 +194,8 @@ void Automaton::setTt(const std::vector<Transition>& tt) {
  * @brief return true if the array is filled with values. Read into automaton.txt
  * @return
  */
-bool Automaton::readA() {
-	ifstream file("data/automate.txt");
+bool Automaton::readA(std::string path) {
+	ifstream file(path.c_str());
 	if (file) {
 		string line;
 		//Search "A={" from the file's beginning to the end.
@@ -250,8 +250,8 @@ bool Automaton::readA() {
  * @brief return true if the array is filled with values. Read into automaton.txt
  * @return
  */
-bool Automaton::readI() {
-	ifstream file("data/automate.txt");
+bool Automaton::readI(std::string path) {
+	ifstream file(path.c_str());
 	if (file) {
 		string line;
 		//Search "I={" from the file's beginning to the end.
@@ -305,8 +305,8 @@ bool Automaton::readI() {
  * @brief return true if the array is filled with values. Read into automaton.txt
  * @return
  */
-bool Automaton::readT() {
-	ifstream file("data/automate.txt");
+bool Automaton::readT(std::string path) {
+	ifstream file(path.c_str());
 	if (file) {
 		string line;
 		//Search "A={" from the file's beginning to the end.
@@ -360,8 +360,8 @@ bool Automaton::readT() {
  * @brief return true if the array is filled with values. Read into automaton.txt
  * @return
  */
-bool Automaton::readQ() {
-	ifstream file("data/automate.txt");
+bool Automaton::readQ(std::string path) {
+	ifstream file(path.c_str());
 	if (file) {
 		string line;
 		//Search "A={" from the file's beginning to the end.
@@ -416,8 +416,8 @@ bool Automaton::readQ() {
  *
  * @return
  */
-bool Automaton::readTransition() {
-	ifstream file("data/automate.txt");
+bool Automaton::readTransition(std::string path) {
+	ifstream file(path.c_str());
 	if(file) {
 		string line;
 		while (getline(file, line)) {
@@ -502,8 +502,8 @@ bool Automaton::readTransition() {
 /**
  * @brief should verify if all files are OK.
  */
-bool Automaton::loadAutomaton() {
-	if (Automaton::readA() && Automaton::readQ() && Automaton::readI() && Automaton::readT() && Automaton::readTransition()) {
+bool Automaton::loadAutomaton(std::string path) {
+	if (Automaton::readA(path) && Automaton::readQ(path) && Automaton::readI(path) && Automaton::readT(path) && Automaton::readTransition(path)) {
 		return true;
 	}
 	else return false;
