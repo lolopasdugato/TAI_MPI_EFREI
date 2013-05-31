@@ -45,7 +45,7 @@ int main() {
 		}
 		cout << endl << endl << endl;
 
-		if(!a.isCompleted()) a.completion();
+		//if(!a.isCompleted()) a.completion();
 		b = a.getA();
 
 		cout << "Apres completion : " << std::endl;
@@ -80,6 +80,9 @@ int main() {
 		}
 
 	}
+
+	cout << endl << endl << "Algo de moi" << endl << endl;
+	a.determinize();
 
 	_getch();
 	return 0;

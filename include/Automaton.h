@@ -12,6 +12,7 @@
 
 #include <vector>
 #include "Transition.h"
+#include <stdlib.h>
 
 class Automaton {
 public:
@@ -51,6 +52,7 @@ public:
 	// Actions
 	void standardize();
 	void completion();
+	void determinize();
 
 
 private:

@@ -629,3 +629,83 @@ void Automaton::completion() {
 	return;
 }
 
+void Automaton::determinize() {
+	vector<int> initial;
+	vector<int> final;
+	vector<int>::iterator it;
+	vector<int> newStates;
+	vector<Transition> tt;
+	vector<Transition> mem;
+	vector<Transition> newTransitions;
+	vector<Transition>::iterator it2;
+	vector<string> newStatesString;
+	Automaton determinized;
+	string sum;
+	int temp = 0;
+
+	if(this->_determinized) return;
+
+	initial = this->_I;
+	tt = this->_TT;
+
+	// si il y a plus d'une entrée on doit les repérer puis noter leurs transitions
+	if(initial.size() > 1) {
+		for(it2 = tt.begin(); it2 != tt.end(); it2++) {
+			for(it = initial.begin(); it != initial.end(); it++) {
+				if((*it2).getStateBegin() == (*it)) mem.push_back((*it2));
+			}
+		}
+	}
+	for(unsigned int cpt=0; cpt < initial.size(); cpt++) {
+		for(unsigned int cpt2=0; cpt2 < initial.size() - 1; cpt2++) {
+				if(initial[cpt] > initial[cpt2]) {
+					temp = initial[cpt];
+					initial[cpt] = initial[cpt2];
+					initial[cpt2] = temp;
+				}
+			}
+	}
+	// on doit fusionner les entrées en créant des nouveaux états
+	for(unsigned int i = 0; i < initial.size(); i++) {
+		newStatesString.push_back("");
+		newStatesString[i].push_back(initial[i] + 48);
+		sum+=newStatesString[i];
+	}
+	newStates.push_back(atoi(sum.c_str()));
+	sum.clear();
+	if(initial.size() > 1) {
+		int i = 0;
+			for(it2 = tt.begin(); it2 != tt.end(); it2++) {
+				for(it = initial.begin(); it != initial.end(); it++) {
+					if((*it2).getStateBegin() == (*it));
+				}
+			}
+		}
+
+	// on doit définir les transitions de ces nouveaux états
+
+
+	// on doit fusionner les états doubles type (1,2 -> 12)
+/*
+	while(123) { // tant qu'on a pas décrit tout les états
+
+	}
+*/
+	// il faut finir par mettre tout les états poubelle
+/*
+	int rr = 1;
+	int ra = 0;
+	string one;
+	one.push_back(rr + 48);
+	string two;
+	two.push_back(ra + 48);
+	string all=one+two;
+	int rz = atoi(all.c_str());
+	cout << all << " " << rz << endl;
+*/
+	for(unsigned int i = 0; i < mem.size(); i++)
+		cout << mem[i].getStateBegin() << "." << (char)mem[i].getTag() << "." << mem[i].getStateEnd() << endl;
+	// une fois qu'on a fini tout ça, l'automate est déterminisé
+	this->_determinized = true;
+	return;
+}
