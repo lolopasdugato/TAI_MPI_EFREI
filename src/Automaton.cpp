@@ -11,6 +11,7 @@
 #include "../include/Transition.h"
 #include <iostream>
 #include <fstream>
+#define P -2
 using namespace std;
 /**
  *
@@ -520,7 +521,7 @@ void Automaton::standardize() {
 	bool toStandardize = false;
 	bool voidWordRecognized = false;
 
-	// Test si L'automate doit être standardisé
+	// Test si L'automate doit ï¿½tre standardisï¿½
 	for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
 		for(it2 = _I.begin(); it2 != _I.end(); it2++) {
 			if((*it1).getStateEnd() == (*it2)) toStandardize = true;
@@ -528,20 +529,20 @@ void Automaton::standardize() {
 	}
 
 	if(_I.size() > 1 || toStandardize == true) {
-		// On enregistre les états à traiter dans un tableau
+		// On enregistre les ï¿½tats ï¿½ traiter dans un tableau
 		for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
 			for(it2 = _I.begin(); it2 != _I.end(); it2++) {
 				if((*it1).getStateBegin() == (*it2)) treatment.push_back(*it1);
 			}
 		}
 
-		//On traite les états initiaux pour n'en faire plus qu'un et on les ranges
+		//On traite les ï¿½tats initiaux pour n'en faire plus qu'un et on les ranges
 		for(it1 = treatment.begin(); it1 != treatment.end(); it1++) {
 			(*it1).setStateBegin(-1);
 			_TT.push_back(*it1);
 		}
 
-		// On renomme les états pour plus de clarté
+		// On renomme les ï¿½tats pour plus de clartï¿½
 		for(it1 = _TT.begin(); it1 != _TT.end(); it1++) {
 			(*it1).setStateBegin((*it1).getStateBegin() + 1);
 			(*it1).setStateEnd((*it1).getStateEnd() + 1);
@@ -551,7 +552,7 @@ void Automaton::standardize() {
 		it2 = _Q.begin();
 		_Q.insert(it2,0);
 
-		// On pense à renommer les états finaux et à rajouter un nouvel état si l'automate reconaissait le mot vide !
+		// On pense ï¿½ renommer les ï¿½tats finaux et ï¿½ rajouter un nouvel ï¿½tat si l'automate reconaissait le mot vide !
 		for(it2 = _T.begin(); it2 != _T.end(); it2++) {
 			for(it3 = _I.begin(); it3 != _I.end(); it3++){
 				if((*it3) == (*it2)){
@@ -561,7 +562,7 @@ void Automaton::standardize() {
 		}
 
 
-		// On définie un unique état initial
+		// On dï¿½finie un unique ï¿½tat initial
 		_I.clear();
 		_I.push_back(0);
 		if(voidWordRecognized) {
@@ -571,7 +572,60 @@ void Automaton::standardize() {
 
 		_standard = true;
 	}
+	return;
+}
 
+void Automaton::completion() {
+	int nb_state(0);
+	int nb_tag(0);
+	int nb_transit(0);
+	bool tag_present = false;
+	bool toComplete = false;
+	vector<Transition> treatment;
+	vector<Transition>::iterator it1;
+	vector<Transition>::iterator it3;
+	vector<int>::iterator it2;
+	vector<int>::iterator it4;
+
+
+	// Test si l'automate est complet ou pas
+	nb_state = _Q.size();
+	nb_tag = _A.size();
+	nb_transit = _TT.size();
+
+	if(nb_transit < nb_state*nb_tag) toComplete = true;
+
+	// ComplÃ©tion
+	if(toComplete){
+
+		// On crÃ©er l'Ã©tat poubelle P
+		_Q.push_back(P);
+
+		it2 = _Q.begin();
+
+		// On va vÃ©rifier si pour chaque Ã©tat, il y a assez de transition
+		do {
+			for(it1 = _TT.begin(); it1 != _TT.end(); it1++)
+				if(*it2 == (*it1).getStateBegin()) treatment.push_back(*it1);
+
+			// VÃ©rifie si chaque tag est prÃ©sent dans les transitions d'un Ã©tat
+			for(it4 = _A.begin(); it4 != _A.end(); it4++) {
+				for(it3 = treatment.begin(); it3 != treatment.end(); it3++) {
+					if((*it3).getTag() == *it4) tag_present = true;
+				}
+
+				// Si un tag n'est pas dans une des transitions d'un Ã©tat, on crÃ©er une transition
+				// avec ce tag, de l'Ã©tat concernÃ© vers un Ã©tat poubelle
+				if (tag_present == false) {
+					Transition trans(*it4, *it2, P);
+					_TT.push_back(trans);
+				}
+				tag_present = false;
+			}
+			treatment.clear();
+			it2++;
+		}while(nb_transit < nb_state*nb_tag);
+	}
 
 	return;
 }

@@ -50,6 +50,7 @@ public:
 
 	// Actions
 	void standardize();
+	void completion();
 
 
 private:
